@@ -1,0 +1,84 @@
+@font-face {
+    font-family: "MadeInfinity";
+    src: url("../font/made_infinity/MADEINFINITYPersonalUse-Medium.otf");
+  }
+  
+  /* Aplica la fuente a todo el documento */
+  * {
+    font-family: "MadeInfinity";
+  }
+  
+  .serviceDescription{
+    border: 1px solid black;
+    border-radius: 20px;
+  }
+
+  nav{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+  }
+
+  header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  ul{
+    display: flex;
+    flex-direction: row;
+    padding:20px;
+  }
+
+  li{
+    padding:20px;
+  }
+
+  a{
+    text-decoration: none;
+    color: black;
+  }
+  .services{
+    display:flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding:20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .inicio{
+    display:flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding:20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .inicio h2{
+    font-size: 80px;
+  }
+
+  .acercaDe{
+    display:flex;
+    flex-direction: column;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    padding:20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .servicesDescritpion{
+    display:flex;
+    flex-direction: row;
+  }

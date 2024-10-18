@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>Chat Interactivo</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-qrcode/1.0/jquery.qrcode.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
+</head>
+
+<body>
+    <div id="welcome" class="welcome">
+        <h1>Bienvenido al Chat</h1>
+
+
+        <a href="../index.html" class="button-link">
+            <button class="atrasbutton">Volver al inicio</button>
+        </a>
+        <label for="username">Nombre de Usuario:</label>
+        <input type="text" id="username" placeholder="Ingresa tu nombre">
+
+        <div>
+            <input type="radio" id="mainUser" name="userType" value="main" checked>
+            <label for="mainUser">Usuario Principal</label>
+            <input type="radio" id="guestUser" name="userType" value="guest">
+            <label for="guestUser">Invitado</label>
+        </div>
+
+        <label for="accessCode" id="accessCodeLabel" style="display:none;">Código de Invitación:</label>
+        <input type="text" id="accessCode" placeholder="Ingresa el código" style="display:none;">
+
+        <button id="joinChat">Unirse al Chat</button>
+    </div>
+
+    <div class="Iniciarsesion">
+
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none"><style>@keyframes check {
+            to {
+              stroke-dashoffset: 0;
+            }
+          }</style><circle cx="12" cy="12" r="8" stroke="#0A0A30" stroke-width="1.5"/><path stroke="#ff0070" stroke-linecap="round" stroke-width="3.5" d="M9.215 12.052l1.822 1.805 3.748-3.714" style="animation:check 2s infinite cubic-bezier(.99,-.1,.01,1.02)" stroke-dashoffset="100" stroke-dasharray="100"/></svg>                                      
+
+
+
+        <a href="auth/index.html" target="_self">Registrarse</a>
+
+
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none"><style>@keyframes check {
+            to {
+              stroke-dashoffset: 0;
+            }
+          }</style><circle cx="12" cy="12" r="8" stroke="#0A0A30" stroke-width="1.5"/><path stroke="#ff0070" stroke-linecap="round" stroke-width="3.5" d="M9.215 12.052l1.822 1.805 3.748-3.714" style="animation:check 2s infinite cubic-bezier(.99,-.1,.01,1.02)" stroke-dashoffset="100" stroke-dasharray="100"/></svg>                                      
+    </div>
+
+    <div id="chat" style="display: none;">
+        <h2>Chat Público</h2>
+        <div id="invitationCodeContainer">
+            <strong>Código de Invitación:</strong> <span id="invitationCode" style="font-weight: bold;"></span>
+            <button id="copyCode">Copiar Código</button>
+        </div>
+
+        <button id="enterPrivateChatButton">Entrar en el Chat Privado</button>
+
+        <div id="messages" class="messages">
+            <!-- Los mensajes se añadirán aquí dinámicamente -->
+        </div>
+        <input type="text" id="messageInput" placeholder="Escribe un mensaje...">
+        <button class="chatbtn" id="sendMessageButton" >
+            Enviar
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" style="margin-left: 10px;">
+                <style>
+                    @keyframes slide-18 {
+                        to { transform: translateY(-1px); }
+                    }
+                </style>
+                <rect width="14" height="14" x="5.523" y="5" stroke="white" stroke-width="1.5" rx="7" />
+                <path fill="white" stroke="white" stroke-linecap="round" stroke-width=".4" d="M15.369 12.742a.429.429 0 11-.549.659l-2.297-1.915-2.297 1.915a.429.429 0 01-.549-.659l2.566-2.138a.425.425 0 01.467-.061.425.425 0 01.093.06l2.566 2.14z" style="animation:slide-18 1s infinite alternate both cubic-bezier(1,-.01,0,.98)" />
+            </svg>
+        </button>
+        <button class="chatbtn" onclick="document.getElementById('imageInput').click();">Subir Imagen<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" style="margin-left: 8px;">
+            <defs>
+                <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 1" />
+                    <stop offset="100%" style="stop-color: #ff99cc; stop-opacity: 1" />
+                </linearGradient>
+            </defs>
+            <style>
+                @keyframes slide {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(5.5px) translateY(-1px); }
+                }
+            </style>
+            <path stroke="url(#pinkGradient)" stroke-width="2" d="M4 8a4 4 0 014-4h8a4 4 0 014 4v8a4 4 0 01-4 4H8a4 4 0 01-4-4V8z"/>
+            <path stroke="url(#pinkGradient)" stroke-width="2" d="M4.221 17.607c.498-.603.767-.816 1.263-1.426.944-1.169 1.58-1.507 2.287-1.21.287.123.575.308.87.503.79.523 1.888 1.24 3.334.461.994-.544 1.57-1.477 2.07-2.286.206-.329.4-.657.627-.954.235-.308 1.107-1.271 2.234-.586.719.432 1.314.915 1.96 1.54.247.24.433.614.55.905.352.88.457 1.372.457 2.488"/>
+            <circle cx="8.647" cy="11.032" r="1.773" fill="#265BFF" style="animation:slide 1.5s cubic-bezier(.86,0,.07,1) infinite alternate-reverse both"/>
+        </svg> </button>
+        
+
+  
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+    </div>
+
+    <div id="privateChatModal" class="privateChatAccess" style="display:none;">
+        <h2>Ingresar Código de Invitación para el Chat Privado</h2>
+        <label for="privateAccessCode">Código de Invitación:</label>
+        <input type="text" id="privateAccessCode" placeholder="Ingresa el código">
+        <button id="confirmPrivateCode">Confirmar Código</button>
+        <button id="cancelPrivateCode">Cancelar</button>
+    </div>
+    
+
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
